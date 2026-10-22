@@ -1,6 +1,7 @@
 package pe.edu.cibertec.inventarioservice.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,12 +13,11 @@ import pe.edu.cibertec.inventarioservice.service.InventarioService;
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/productos")
 @RestController
-@RequestMapping("/api/productos")
-@CrossOrigin(origins = "${app.cors.allowed-origin:http://localhost:4200}")
 public class InventarioController {
     private final InventarioService service;
-    public InventarioController(InventarioService service) { this.service=service; }
     @GetMapping public List<Producto> listar() { return service.listar(); }
     @GetMapping("/{id}") public Producto obtener(@PathVariable Integer id) { return service.obtener(id); }
     @PostMapping public ResponseEntity<Producto> crear(@Valid @RequestBody ProductoRequest request) { return ResponseEntity.status(HttpStatus.CREATED).body(service.crear(request)); }

@@ -1,7 +1,10 @@
 package pe.edu.cibertec.inventarioservice.service;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import pe.edu.cibertec.inventarioservice.dto.ProductoRequest;
 import pe.edu.cibertec.inventarioservice.dto.MovimientoRequest;
 import pe.edu.cibertec.inventarioservice.model.MovimientoInventario;
@@ -10,15 +13,13 @@ import pe.edu.cibertec.inventarioservice.repository.MovimientoInventarioReposito
 import pe.edu.cibertec.inventarioservice.repository.ProductoRepository;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class InventarioService {
     private final ProductoRepository productoRepository;
     private final MovimientoInventarioRepository movimientoRepository;
-    public InventarioService(ProductoRepository productoRepository, MovimientoInventarioRepository movimientoRepository) {
-        this.productoRepository = productoRepository; this.movimientoRepository = movimientoRepository;
-    }
     public List<Producto> listar() { return productoRepository.findAll(); }
-    public Producto obtener(Integer id) { return productoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Producto no encontrado")); }
+    public Producto obtener(Integer id) { return productoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado")); }
     public Producto crear(ProductoRequest r) {
         Producto p = new Producto(); copiar(r,p); return productoRepository.save(p);
     }
